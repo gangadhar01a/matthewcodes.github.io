@@ -4,7 +4,7 @@
   <title><![CDATA[MatthewCodes]]></title>
   <link href="http://matthewcodes.github.io/atom.xml" rel="self"/>
   <link href="http://matthewcodes.github.io/"/>
-  <updated>2015-04-14T20:22:51+01:00</updated>
+  <updated>2015-04-14T23:54:24+01:00</updated>
   <id>http://matthewcodes.github.io/</id>
   <author>
     <name><![CDATA[Matthew Wilson]]></name>
@@ -14,11 +14,80 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Live Video Streaming; Lessons Learnt So Far]]></title>
-    <link href="http://matthewcodes.github.io/blog/2015/04/14/live-video-streaming-lessons-learnt-so-far/"/>
+    <title type="html"><![CDATA[Live Video Streaming - Azure Media Services]]></title>
+    <link href="http://matthewcodes.github.io/blog/2015/04/14/live-video-streaming-azure/"/>
     <updated>2015-04-14T20:20:32+01:00</updated>
-    <id>http://matthewcodes.github.io/blog/2015/04/14/live-video-streaming-lessons-learnt-so-far</id>
-    <content type="html"><![CDATA[
+    <id>http://matthewcodes.github.io/blog/2015/04/14/live-video-streaming-azure</id>
+    <content type="html"><![CDATA[<p>Live streaming with Azure Media Services and YouTube, how hard can it be?</p>
+
+<!-- more -->
+
+
+<p>Recently I have been working on redesigning my church&rsquo;s website <a href="http://mwil.so/sbc">(sneak preview here)</a>, with the new design I wanted to update the technology that we use for our live broadcasts of the Sunday services.</p>
+
+<p>We use Influxis as our streaming provider which costs around £200 per year. As we started live streaming several years ago our current plan isn&rsquo;t offered anymore and if we wanted to update to a newer plan the cheapest is $95 per month, which is too expensive; considering it is only used twice on a Sunday.</p>
+
+<p>There are several other reasons why I wanted to look into other options:</p>
+
+<ul>
+<li>Our plan only permitted 20 simultaneous connections</li>
+<li>As our plan is no longer offered, we are also stuck with a broken admin portal, many of the features are broken.</li>
+<li>It is flash based, so only really works properly on desktops</li>
+<li>Quality is poor with limited bandwidth permitted by the plan.</li>
+</ul>
+
+
+<p>Once I had completed the new design for the site, my next task was to look into new streaming options. My first port of call was <a href="http://azure.microsoft.com/en-gb/services/media-services/">Azure Media Services</a></p>
+
+<h1>Azure Media Services</h1>
+
+<p>Azure Media Services provide the capability to stream live events using the Azure cloud platform.</p>
+
+<p>To get started I followed the guide <a href="http://azure.microsoft.com/blog/2014/09/10/getting-started-with-live-streaming-using-the-azure-management-portal/">here</a>, it guides you through a step by step process on starting live streaming using the Azure portal.</p>
+
+<p>We use Flash Media Live Encoder as our program of choice for broadcasting the stream and I was keen to continue using it, as there are other people in the church that help with the broadcasts and I wanted the impact on them to be as small as possible. I followed the guide <a href="http://azure.microsoft.com/blog/2014/09/18/azure-media-services-rtmp-support-and-live-encoders/">here</a> to configure FMLE.</p>
+
+<p>Following the steps above enabled me to get a live stream up and running without too much pain, however as I said before there are other less technical people who help with the broadcast and I needed to make a simple process to start and stop streaming in Azure.</p>
+
+<h2>Media Services REST API</h2>
+
+<p>To start and stop streaming without using the portal, I decided to use the <a href="https://msdn.microsoft.com/en-us/library/azure/hh973617.aspx">Media Services REST API</a> this provides all the necessary endpoints for creating the resources you need in Azure. The tricky part was determining what resources I actually needed, after a lot of experimentation here are the calls necessary for a live stream:</p>
+
+<ol>
+<li>First you need to get an access token, a guide on how to do that is <a href="https://msdn.microsoft.com/en-us/library/azure/jj129576.aspx#get_token">here</a>.</li>
+<li>You then need to make a request to <a href="https://media.windows.net/">https://media.windows.net/</a> which should respond with a 301 code and a redirect url, this is the url that you need to use for all subsequent calls to the REST API.</li>
+<li><a href="https://msdn.microsoft.com/en-us/library/azure/dn783468.aspx#start_create_streaming_endpoints">Start the StreamingEndpoint</a></li>
+<li><a href="https://msdn.microsoft.com/en-us/library/azure/dn783458.aspx#start_channels">Start the Channel</a></li>
+<li><a href="https://msdn.microsoft.com/en-us/library/azure/hh974277.aspx#create_an_asset">Create an Asset</a></li>
+<li><a href="https://msdn.microsoft.com/en-us/library/azure/dn783463.aspx#create_programs">Create a Program</a></li>
+<li><a href="https://msdn.microsoft.com/en-us/library/azure/dn783463.aspx#start_programs">Start the Program</a></li>
+<li><a href="https://msdn.microsoft.com/en-us/library/azure/hh974297.aspx#create_an_accesspolicy">Create an Access policy</a></li>
+<li><a href="https://msdn.microsoft.com/en-us/library/azure/hh974308.aspx#create_a_locator">Create a Locator</a></li>
+<li><a href="https://msdn.microsoft.com/en-us/library/azure/hh974275.aspx#list_files">Retrieve the AssetFile</a></li>
+</ol>
+
+
+<p>The last step is necessary for determining the publish URL i.e. the URL that the stream will be playing at, it has a format like:</p>
+
+<p><a href="http://account_name.origin.mediaservices.windows.net/locator_guid/stream_guid.ism/manifest">http://account_name.origin.mediaservices.windows.net/locator_guid/stream_guid.ism/manifest</a></p>
+
+<p>You can then test your stream by pasting your publish url into <a href="http://dashplayer.azurewebsites.net/">http://dashplayer.azurewebsites.net/</a> which will play the stream for you.</p>
+
+<p>As you can see there were a lot of steps required just to get setup for streaming, what annoyed me was that in the Azure portal this process was only a few mouse clicks!</p>
+
+<p>Luckily for everyone else I have created a java app that can start and tear down the resources in Azure, it is available on GitHub <a href="https://github.com/matthewcodes/AzureMediaServicesManager">here</a>. If you want to know more details on the content of all the requests and responses and how they are used have a look at the source code.</p>
+
+<h1>Conclusion</h1>
+
+<p>After all this work I had finally got a rough process in place that would allow someone to make a few mouse clicks and have the streaming running live in Azure. However there is a problem, Azure is expensive for this kind of stuff, in fact most cloud platforms are expensive for media encoding and streaming. In the time it took me to create the app which consisted of creating and tearing down resources, and very little streaming I had ate into £10 of my Azure credit.</p>
+
+<p>This worried me, I have £65 per month of credit that I can use and I would be streaming about 10 hours a month. I&rsquo;m hoping that the cost was down to me starting and stopping resources and in the real world the actual cost will be much less. I will update this post with the actual cost per hour once we move to the new streaming system.</p>
+
+<p>I think Azure is a viable option, provided it is cost effective. Other cloud platforms require a 3rd party application to be installed in an instance for live streaming, but Azure supports it out of the box.</p>
+
+<p>However I decided that I needed a backup solution incase we ever run out of credit, for that I turned to YouTube and it&rsquo;s <a href="https://developers.google.com/youtube/v3/live/">Live Stream API</a>. I will cover my YouTube solution in my next blog post.</p>
+
+<p>In the meantime you can check out the code for the new Saintfield Baptist website on GitHub - <a href="https://github.com/matthewcodes/SaintfieldBaptistChurch.">https://github.com/matthewcodes/SaintfieldBaptistChurch.</a> My <a href="https://github.com/matthewcodes/SaintfieldBaptistChurch/blob/master/Client/js/liveVideoPlayer.js">LiveVideoPlayer component created using React.js</a> may also be of interest.</p>
 ]]></content>
   </entry>
   
