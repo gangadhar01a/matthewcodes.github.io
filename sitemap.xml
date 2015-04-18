@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://matthewcodes.github.io/blog/2015/04/18/react-dot-js-feedwidget/</loc>
+    <lastmod>2015-04-18T20:33:10+01:00</lastmod>
+  </url>
+  <url>
     <loc>http://matthewcodes.github.io/blog/2015/04/14/live-video-streaming-azure/</loc>
     <lastmod>2015-04-14T20:20:32+01:00</lastmod>
   </url>
@@ -18,5 +22,11 @@
   </url>
   <url>
     <loc>http://matthewcodes.github.io/blog/categories/azure/</loc>
+  </url>
+  <url>
+    <loc>http://matthewcodes.github.io/blog/categories/react-dot-js/</loc>
+  </url>
+  <url>
+    <loc>http://matthewcodes.github.io/blog/categories/tutorial/</loc>
   </url>
 </urlset>

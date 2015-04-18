@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>React.js FeedWidget - MatthewCodes</title>
+  <meta name="author" content="Matthew Wilson">
+
+  
+  <meta name="description" content="React.js FeedWidget written Apr 18th, 2015 in react.js, tutorial Adding a &ldquo;Recent Posts&rdquo; widget to my site mwil.so using React.js After &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://matthewcodes.github.io/blog/2015/04/18/react-dot-js-feedwidget">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="MatthewCodes" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-62020128-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+  <body>
+    <a href="/" class="home-icon">
+      <img src="/images/home.png"/>
+    </a>
+
+    <article role="article" class="full-single-article">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <h1>React.js FeedWidget</h1>
+        <div class="meta">
+          written 
+
+
+
+
+<time class='entry-date' datetime='2015-04-18T20:33:10+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'></span></time>
+          
+
+in
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/react-dot-js/'>react.js</a>, <a class='category' href='/blog/categories/tutorial/'>tutorial</a>
+  
+</span>
+
+
+        </div>
+        <p>Adding a &ldquo;Recent Posts&rdquo; widget to my site <a href="http://www.mwil.so">mwil.so</a> using React.js</p>
+
+<!-- more -->
+
+
+<p>After setting up this blog, I wanted to add a link to my personal website. I felt it was a good opportunity to make a simple &ldquo;Feed Widget&rdquo; using <a href="https://facebook.github.io/react/">React.js</a>, that could be reused by others.</p>
+
+<h1>What&rsquo;s React.js?</h1>
+
+<p>React.js is a javascript library, created by FaceBook, that allows developers to build reusable user interface components. One good example is a comments box similar to the Disqus comments at the bottom of this page. The <a href="https://facebook.github.io/react/docs/tutorial.html">sample tutorial</a> on the react site takes you through creating a comment box of your own.</p>
+
+<p>I like using React because it allows you to create self contained components that take care of updating and rendering themselves. I have used it extensively on a <a href="https://github.com/matthewcodes/SaintfieldBaptistChurch">site I&rsquo;m working on</a> for the navigation bar, footer, video and audio players, and I feel it has allowed me to make components with a lot of dynamic behaviour with no issues.</p>
+
+<h1>FeedWidget</h1>
+
+<p>FeedWidget is the unimaginative name I&rsquo;ve given to the component I&rsquo;ve created for displaying posts from an rss or atom feed on a webpage, it can be seen in action at the bottom <a href="http://mwil.so/">my mwil.so site</a>.</p>
+
+<p>Built using React.js, it fetches the <a href="http://matthewcodes.github.io/atom.xml">atom feed from this blog</a>, parses the contents, and displays them as html. It&rsquo;s simple enough to be a good introduction into using React.</p>
+
+<h3>Setting Up</h3>
+
+<p>Download the React starter kit <a href="https://facebook.github.io/react/downloads/react-0.13.1.zip">here</a> and copy the <code>build/react.js</code> and <code>build/JSXTransformer.js</code> files into your project directory. Then create an <code>index.html</code> page with the following contents:</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;script src="build/react.js"&gt;&lt;/script&gt;
+    &lt;script src="build/JSXTransformer.js"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id="example"&gt;&lt;/div&gt;
+    &lt;script type="text/jsx"&gt;
+      React.render(
+        &lt;h1&gt;Hello, world!&lt;/h1&gt;,
+        document.getElementById('example')
+      );
+    &lt;/script&gt;
+ &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Loading the page will cause &lsquo;Hello, World!&rsquo; to be rendered as an <code>h1</code> element in the example <code>div</code>.</p>
+
+<h3>Fetching Posts</h3>
+
+<p>To retrieve and parse the posts from the atom.xml I used a jQuery plugin called <a href="https://github.com/jfhovinne/jFeed">JFeed</a> The repository hasn&rsquo;t been updated in 4 years and I had to make a few simple tweeks to get it to work with the latest version jQuery. My tweeked version can be found in the FeedWidget repo <a href="https://github.com/matthewcodes/FeedWidget/blob/master/js/jquery.jfeed.js">here</a></p>
+
+<p>Once you have added it to your project, retrieving posts is a small bit of code:</p>
+
+<pre><code>jQuery.getFeed({
+  url: 'http://matthewcodes.github.io/atom.xml',
+  success: function(feed) {
+    //do something with feed!
+  }
+});
+</code></pre>
+
+<h3>Using React to render posts</h3>
+
+<p>Update your index.html so it looks like this:</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;script src="http://code.jquery.com/jquery-1.11.2.min.js"&gt;&lt;/script&gt;
+    &lt;script src="js/jquery.jfeed.js"&gt;&lt;/script&gt;
+    &lt;script src="js/react.js"&gt;&lt;/script&gt;
+    &lt;script src="js/JSXTransformer.js"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id="feed"&gt;&lt;/div&gt;
+    &lt;script type="text/jsx" src="js/FeedWidget.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Notice we have added a new script import to the bottom called <code>FeedWidget.js</code>, create a blank file called <code>FeedWidget.js</code> in your js folder.</p>
+
+<p>Add the following content to the FeedWidget file:</p>
+
+<pre><code>var LiveAlert = React.createClass({
+  render : function() {
+    return (&lt;div&gt;&lt;p&gt;Loading Posts&lt;/p&gt;&lt;/div&gt;);
+  }
+});
+
+React.render(
+  &lt;LiveAlert/&gt;,
+  document.getElementById('feed')
+);
+</code></pre>
+
+<p>If you load up your index.html file you will see the message &ldquo;Loading Posts&rdquo; rendered on the page.</p>
+
+<p>To fetch posts we can add our jFeed call to one of the Lifecycle events <a href="https://facebook.github.io/react/docs/component-specs.html#mounting-componentdidmount">componentDidMount</a> this gets &ldquo;Invoked once, only on the client (not on the server), immediately after the initial rendering occurs.&rdquo; So it is a perfect place to add our ajax call:</p>
+
+<pre><code>var LiveAlert = React.createClass({
+  getInitialState: function() {
+  return {
+       data : undefined
+    };
+  },
+  componentDidMount: function() {
+    var widget = this;
+    jQuery.getFeed({
+      url: this.props.url,
+      success: function(feed) {
+        if(widget.isMounted()) {
+          widget.setState({
+            data: feed
+          });
+        }
+      }
+    });
+  },
+  render : function() {
+     ...
+  }
+});
+</code></pre>
+
+<p>Notice in the componentDidMount function we have added our <code>getFeed</code> call, and in the <code>success</code> function we call <code>widget.setState</code>, when the <code>setState</code> method is called it updates the state object and causes react to re-render the component.</p>
+
+<p>Also notice I have added a <code>getInitialState</code> function, this is used by react to set up the default state of the component, although it&rsquo;s not really necessary in this example.</p>
+
+<p>You can also see that the url we are calling to fetch the posts is set as a property: <code>this.props.url</code>, this is passed in when we render the component like so:</p>
+
+<pre><code>React.render(
+  &lt;LiveAlert url="http://matthewcodes.github.io/atom.xml" lengthOfExcerpt="78"/&gt;,
+  document.getElementById('feed')
+);
+</code></pre>
+
+<p>I have also added a <code>lengthOfExcerpt</code> property that we will use later.</p>
+
+<p>At this point our component is fetching the posts and storing them in the component&rsquo;s state, the next step is to render the posts, and we do this in the render function.</p>
+
+<p>Add the following code to replace the render function:</p>
+
+<pre><code>removeCdata : function(text) {
+  return text.replace("&lt;![CDATA[", "").replace("]]&gt;","").trim();
+},
+render : function() {
+
+  if(this.state.data) {
+
+    var widget = this;
+
+    var items = this.state.data.items.map(function(item) {
+        var title = widget.removeCdata(item.title);
+        var description = widget.removeCdata(item.description);
+        description = description.substring(0, widget.props.lengthOfExcerpt);
+
+        return (
+          &lt;div&gt;
+            &lt;a href={item.link}&gt;&lt;h1&gt;{title}&lt;/h1&gt;&lt;/a&gt;
+            &lt;p&gt;{description}&lt;/p&gt;
+          &lt;/div&gt;
+        );
+    });
+
+    return(
+      &lt;div&gt;
+        {items}
+      &lt;/div&gt;
+    );
+
+  } else {
+    return (&lt;div&gt;&lt;p&gt;Loading Posts&lt;/p&gt;&lt;/div&gt;);
+  }
+}
+</code></pre>
+
+<p>Most of the code here is self explanatory, but the most important part to understand is what we return from this function is what gets rendered on the page, so from the code above:</p>
+
+<pre><code>var items = this.state.data.items.map(function(item) {
+    var title = widget.removeCdata(item.title);
+    var description = widget.removeCdata(item.description);
+    description = description.substring(0, widget.props.lengthOfExcerpt);
+
+    return (
+      &lt;div&gt;
+        &lt;a href={item.link}&gt;&lt;h1&gt;{title}&lt;/h1&gt;&lt;/a&gt;
+        &lt;p&gt;{description}&lt;/p&gt;
+      &lt;/div&gt;
+    );
+});
+
+return(
+  &lt;div&gt;
+    {items}
+  &lt;/div&gt;
+);
+</code></pre>
+
+<p>Returns a div containing the all the items, which have been stored in the items variable.</p>
+
+<p>I have intentionally avoided adding any styling to the widget so that others can customise it for their sites. On my own site I use bootstrap to take care of the styling for me.</p>
+
+<p>If you want to see the complete source code for the widget it is available on <a href="https://github.com/matthewcodes/FeedWidget">GitHub</a> and a working example can be viewed <a href="http://mwil.so/">here</a></p>
+
+
+        <hr class="divider-short"/>
+
+        
+        <section>
+          <h1>Comments</h1>
+          <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </section>
+        
+      </div>
+    </div>
+  </div>
+</article>
+
+<hr class="divider-short"/>
+
+<div class="archive-link">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        
+          <a class="pull-left" href="/blog/2015/04/14/live-video-streaming-azure/" title="Previous Post: Live Video Streaming - Azure Media Services">&laquo; Previous: Live Video Streaming - Azure Media Services</a>
+        
+
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+    <footer id="footer" class="her-row">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-1">
+  <a href="/"><h4>Home</h4></a>
+</div>
+
+<div class="col-md-2">
+  <div class="social-icon-list">
+    
+    <a href="https://twitter.com/matt_codes"><img src="/images/glyphicons_social_31_twitter.png"/></a>
+    
+
+    
+    <a href="https://github.com/matthewcodes"><img src="/images/glyphicons_social_21_github.png"/></a>
+    
+
+    
+
+    
+  </div>
+</div>
+
+<div class="pull-right">
+  <h4>Powered by <a href="http://octopress.org/">Octopress</a>.</h4>
+</div>
+
+
+    </div>
+  </div>
+</footer>
+
+    
+      
+
+<script type="text/javascript">
+      var disqus_shortname = 'matthewcodes';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://matthewcodes.github.io/blog/2015/04/18/react-dot-js-feedwidget/';
+        var disqus_url = 'http://matthewcodes.github.io/blog/2015/04/18/react-dot-js-feedwidget/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+    
+  </body>
+</html>
