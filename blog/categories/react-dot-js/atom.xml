@@ -4,7 +4,7 @@
   <title><![CDATA[Category: react.js | MatthewCodes]]></title>
   <link href="http://matthewcodes.github.io/blog/categories/react-dot-js/atom.xml" rel="self"/>
   <link href="http://matthewcodes.github.io/"/>
-  <updated>2015-04-18T21:43:36+01:00</updated>
+  <updated>2015-04-18T21:45:43+01:00</updated>
   <id>http://matthewcodes.github.io/</id>
   <author>
     <name><![CDATA[Matthew Wilson]]></name>
@@ -217,7 +217,7 @@ return(
 
 <p>I have intentionally avoided adding any styling to the widget so that others can customise it for their sites. On my own site I use bootstrap to take care of the styling for me.</p>
 
-<p>If you want to see the complete source code for the widget it is available on <a href="https://github.com/matthewcodes/FeedWidget">GitHub</a> and a working example can be viewed <a href="http://mwil.so/">here</a></p>
+<p>If you want to see the complete source code for the widget it is available on <a href="https://github.com/matthewcodes/FeedWidget">GitHub</a> and a working example can be viewed <a href="http://mwil.so/">here.</a></p>
 ]]></content>
   </entry>
   
