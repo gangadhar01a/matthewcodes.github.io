@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Portfolio: Saintfield Baptist Church - MatthewCodes</title>
+  <meta name="author" content="Matthew Wilson">
+
+  
+  <meta name="description" content="Portfolio: Saintfield Baptist Church written Apr 20th, 2015 in portfolio, web design Website redesign for saintfieldbaptist.org.uk Over the past few &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://matthewcodes.github.io/blog/2015/04/20/portfolio-saintfield-baptist-church">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="MatthewCodes" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-62020128-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+  <body>
+    <a href="/" class="home-icon">
+      <img src="/images/home.png"/>
+    </a>
+
+    <article role="article" class="full-single-article">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <h1>Portfolio: Saintfield Baptist Church</h1>
+        <div class="meta">
+          written 
+
+
+
+
+<time class='entry-date' datetime='2015-04-20T23:12:26+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'></span></time>
+          
+
+in
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/portfolio/'>portfolio</a>, <a class='category' href='/blog/categories/web-design/'>web design</a>
+  
+</span>
+
+
+        </div>
+        <p>Website redesign for <a href="http://www.saintfieldbaptist.org.uk">saintfieldbaptist.org.uk</a></p>
+
+<!-- more -->
+
+
+<p>Over the past few months I have been working on a redesign for a website that I started working on back when I was still in school!</p>
+
+<p>The site was originally set up by someone else back when I had no web development skills (perhaps still true!). As I gained more experience I was able update the site and add more features including: a mobile site, sermon downloads and live streaming services. Using skills learnt while I was on summer placement I was able to add a sql database to store all our sermons, rather than updating an html page each Sunday.</p>
+
+<p>The site helped me to learn and develop my html, css, javascript and php skills. Skills that helped me to further my university progression and professional career.</p>
+
+<p>It has served the church well, but in the past few years is has become extremely dated both in design and content, the only real feature that was kept up to date was the live streaming as it is probably the one feature that is depended on by people who can&rsquo;t make it out to church.</p>
+
+<h2>The Issues</h2>
+
+<p>There were a number of issues that needed to be resolved as part of the redesign:</p>
+
+<ol>
+<li><strong>Make it fully responsive</strong> - the existing version had a separate mobile site (built using JQuery Mobile), I wanted to have a single, responsive web site.</li>
+<li><strong>Make it easier to maintain</strong> - a simple CMS would help to maintain the content, eventually allowing other people to help with updating the site.</li>
+<li><strong>Move our live streaming to a mobile friendly streaming provider.</strong> (<a href="http://localhost:4000/blog/categories/live-streaming/">Read about my live streaming investigations here</a>)</li>
+<li><strong>Improve the design</strong> - the <a href="/images/oldDesign.png">previous design</a> was <em>very</em> dated!</li>
+<li><strong>Introduce an API</strong> - previously I used php to generate the dynamic content, e.g. the sermons download page. This time around I wanted to create a json api that could be used by the website and potentially native clients.</li>
+</ol>
+
+
+<h2>The Frameworks</h2>
+
+<p>I wanted to use this opportunity to bring the Saintfield site right up to modern standards and use modern frameworks.</p>
+
+<p>I&rsquo;m not a designer so like most I turned to <a href="http://getbootstrap.com/">Twitter&rsquo;s Bootstrap</a> to help with both a mobile first design and a consistent look and feel. Throughout the process I really took the time to become familiar with all of Bootstrap&rsquo;s features and I think it paid off in terms of responsiveness and aesthetics. I&rsquo;m using the <a href="http://www.google.com/fonts/specimen/Lato">Lato font</a> rather than the fonts specified by bootstrap as I felt it suited the site better.</p>
+
+<p>I also wanted to use a framework that ended with &lsquo;.js&rsquo;, the problem with this is that there are so many! The two main contenders were Angular and React. One provides a full MVC framework the other just provides the V.</p>
+
+<p>I used Angular for our <a href="https://github.com/matthewcodes/ping">work hackathon</a> and it really did enable us to add more features to our app in a short period of time. However I felt that Angular would be overkill for such a simple site and with the upcoming Angular 2.0 rewrite, I didn&rsquo;t want something that I would need to rewrite myself in a few months time.</p>
+
+<p>React is a framework that focuses on the user interface, it can be used with other frameworks or by itself and I liked that flexibility. It&rsquo;s also great for building reusable components (<a href="http://localhost:4000/blog/2015/04/18/react-dot-js-feedwidget/">Check out my example in a previous post</a>). My first thought was what elements of the site are repeated across different pages? The answers I came up with were:</p>
+
+<ul>
+<li>Navigation Bar</li>
+<li>Footer</li>
+<li>Upcoming Speakers</li>
+<li>Sermon Downloads</li>
+</ul>
+
+
+<p>There were also some components that were not really used in multiple places but did benefit from using react:</p>
+
+<ul>
+<li>Video Player</li>
+<li>Audio Player</li>
+</ul>
+
+
+<p>These components had some dynamic behaviour and React allowed me to encapsulate that behaviour into a single component.</p>
+
+<h2>The Design</h2>
+
+<p>I decided that I wanted to really try and get the most out of Bootstrap for the site, I made good use of the <a href="http://getbootstrap.com/css/#grid">grid</a> system and <a href="http://getbootstrap.com/css/#responsive-utilities">responsive utility classes.</a></p>
+
+<p>The time spent using Bootstrap to it&rsquo;s potential allowed me to create a site that was consistent and sharp. As well as looking great on mobile devices.</p>
+
+<p><img src="/images/devices.jpg" class="img-responsive"></img></p>
+
+<p>I&rsquo;m not a designer so I found <a href="https://color.adobe.com">Adobe&rsquo;s Colour CC</a> to be really useful when picking the colour scheme.</p>
+
+<h2>The API</h2>
+
+<p>I restructured our database into something that was a bit more normalised, and created a new <code>GetSermons.php</code> that would retrieve and return the sermons in JSON. The php function <code>json_encode</code> made this task incredibly simple.</p>
+
+<p>I&rsquo;m hoping I can reuse the API for an iOS app at some stage in the future, maybe learning some swift along the way.</p>
+
+<h2>The Conclusion</h2>
+
+<p>Overall I feel this has been a good first step into breathing some life into the Saintfield website. My next steps will be deciding what to do for our live stream and creating the necessary tools so that the streaming team can start and stop streams simply.</p>
+
+<p>The source code for the site can be found on my GitHub <a href="https://github.com/matthewcodes/SaintfieldBaptistChurch">here</a></p>
+
+
+        <hr class="divider-short"/>
+
+        
+        <section>
+          <h1>Comments</h1>
+          <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </section>
+        
+      </div>
+    </div>
+  </div>
+</article>
+
+<hr class="divider-short"/>
+
+<div class="archive-link">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        
+          <a class="pull-left" href="/blog/2015/04/18/react-dot-js-feedwidget/" title="Previous Post: React.js FeedWidget">&laquo; Previous: React.js FeedWidget</a>
+        
+
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+    <footer id="footer" class="her-row">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-1">
+  <a href="/"><h4>Home</h4></a>
+</div>
+
+<div class="col-md-2">
+  <div class="social-icon-list">
+    
+    <a href="https://twitter.com/matt_codes"><img src="/images/glyphicons_social_31_twitter.png"/></a>
+    
+
+    
+    <a href="https://github.com/matthewcodes"><img src="/images/glyphicons_social_21_github.png"/></a>
+    
+
+    
+
+    
+  </div>
+</div>
+
+<div class="pull-right">
+  <h4>Powered by <a href="http://octopress.org/">Octopress</a>.</h4>
+</div>
+
+
+    </div>
+  </div>
+</footer>
+
+    
+      
+
+<script type="text/javascript">
+      var disqus_shortname = 'matthewcodes';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://matthewcodes.github.io/blog/2015/04/20/portfolio-saintfield-baptist-church/';
+        var disqus_url = 'http://matthewcodes.github.io/blog/2015/04/20/portfolio-saintfield-baptist-church/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+    
+  </body>
+</html>

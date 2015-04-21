@@ -4,7 +4,7 @@
   <title><![CDATA[MatthewCodes]]></title>
   <link href="http://matthewcodes.github.io/atom.xml" rel="self"/>
   <link href="http://matthewcodes.github.io/"/>
-  <updated>2015-04-18T21:45:43+01:00</updated>
+  <updated>2015-04-21T21:31:57+01:00</updated>
   <id>http://matthewcodes.github.io/</id>
   <author>
     <name><![CDATA[Matthew Wilson]]></name>
@@ -12,6 +12,91 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Portfolio: Saintfield Baptist Church]]></title>
+    <link href="http://matthewcodes.github.io/blog/2015/04/20/portfolio-saintfield-baptist-church/"/>
+    <updated>2015-04-20T23:12:26+01:00</updated>
+    <id>http://matthewcodes.github.io/blog/2015/04/20/portfolio-saintfield-baptist-church</id>
+    <content type="html"><![CDATA[<p>Website redesign for <a href="http://www.saintfieldbaptist.org.uk">saintfieldbaptist.org.uk</a></p>
+
+<!-- more -->
+
+
+<p>Over the past few months I have been working on a redesign for a website that I started working on back when I was still in school!</p>
+
+<p>The site was originally set up by someone else back when I had no web development skills (perhaps still true!). As I gained more experience I was able update the site and add more features including: a mobile site, sermon downloads and live streaming services. Using skills learnt while I was on summer placement I was able to add a sql database to store all our sermons, rather than updating an html page each Sunday.</p>
+
+<p>The site helped me to learn and develop my html, css, javascript and php skills. Skills that helped me to further my university progression and professional career.</p>
+
+<p>It has served the church well, but in the past few years is has become extremely dated both in design and content, the only real feature that was kept up to date was the live streaming as it is probably the one feature that is depended on by people who can&rsquo;t make it out to church.</p>
+
+<h2>The Issues</h2>
+
+<p>There were a number of issues that needed to be resolved as part of the redesign:</p>
+
+<ol>
+<li><strong>Make it fully responsive</strong> - the existing version had a separate mobile site (built using JQuery Mobile), I wanted to have a single, responsive web site.</li>
+<li><strong>Make it easier to maintain</strong> - a simple CMS would help to maintain the content, eventually allowing other people to help with updating the site.</li>
+<li><strong>Move our live streaming to a mobile friendly streaming provider.</strong> (<a href="http://localhost:4000/blog/categories/live-streaming/">Read about my live streaming investigations here</a>)</li>
+<li><strong>Improve the design</strong> - the <a href="http://matthewcodes.github.io/images/oldDesign.png">previous design</a> was <em>very</em> dated!</li>
+<li><strong>Introduce an API</strong> - previously I used php to generate the dynamic content, e.g. the sermons download page. This time around I wanted to create a json api that could be used by the website and potentially native clients.</li>
+</ol>
+
+
+<h2>The Frameworks</h2>
+
+<p>I wanted to use this opportunity to bring the Saintfield site right up to modern standards and use modern frameworks.</p>
+
+<p>I&rsquo;m not a designer so like most I turned to <a href="http://getbootstrap.com/">Twitter&rsquo;s Bootstrap</a> to help with both a mobile first design and a consistent look and feel. Throughout the process I really took the time to become familiar with all of Bootstrap&rsquo;s features and I think it paid off in terms of responsiveness and aesthetics. I&rsquo;m using the <a href="http://www.google.com/fonts/specimen/Lato">Lato font</a> rather than the fonts specified by bootstrap as I felt it suited the site better.</p>
+
+<p>I also wanted to use a framework that ended with &lsquo;.js&rsquo;, the problem with this is that there are so many! The two main contenders were Angular and React. One provides a full MVC framework the other just provides the V.</p>
+
+<p>I used Angular for our <a href="https://github.com/matthewcodes/ping">work hackathon</a> and it really did enable us to add more features to our app in a short period of time. However I felt that Angular would be overkill for such a simple site and with the upcoming Angular 2.0 rewrite, I didn&rsquo;t want something that I would need to rewrite myself in a few months time.</p>
+
+<p>React is a framework that focuses on the user interface, it can be used with other frameworks or by itself and I liked that flexibility. It&rsquo;s also great for building reusable components (<a href="http://localhost:4000/blog/2015/04/18/react-dot-js-feedwidget/">Check out my example in a previous post</a>). My first thought was what elements of the site are repeated across different pages? The answers I came up with were:</p>
+
+<ul>
+<li>Navigation Bar</li>
+<li>Footer</li>
+<li>Upcoming Speakers</li>
+<li>Sermon Downloads</li>
+</ul>
+
+
+<p>There were also some components that were not really used in multiple places but did benefit from using react:</p>
+
+<ul>
+<li>Video Player</li>
+<li>Audio Player</li>
+</ul>
+
+
+<p>These components had some dynamic behaviour and React allowed me to encapsulate that behaviour into a single component.</p>
+
+<h2>The Design</h2>
+
+<p>I decided that I wanted to really try and get the most out of Bootstrap for the site, I made good use of the <a href="http://getbootstrap.com/css/#grid">grid</a> system and <a href="http://getbootstrap.com/css/#responsive-utilities">responsive utility classes.</a></p>
+
+<p>The time spent using Bootstrap to it&rsquo;s potential allowed me to create a site that was consistent and sharp. As well as looking great on mobile devices.</p>
+
+<p><img src="http://matthewcodes.github.io/images/devices.jpg" class="img-responsive"></img></p>
+
+<p>I&rsquo;m not a designer so I found <a href="https://color.adobe.com">Adobe&rsquo;s Colour CC</a> to be really useful when picking the colour scheme.</p>
+
+<h2>The API</h2>
+
+<p>I restructured our database into something that was a bit more normalised, and created a new <code>GetSermons.php</code> that would retrieve and return the sermons in JSON. The php function <code>json_encode</code> made this task incredibly simple.</p>
+
+<p>I&rsquo;m hoping I can reuse the API for an iOS app at some stage in the future, maybe learning some swift along the way.</p>
+
+<h2>The Conclusion</h2>
+
+<p>Overall I feel this has been a good first step into breathing some life into the Saintfield website. My next steps will be deciding what to do for our live stream and creating the necessary tools so that the streaming team can start and stop streams simply.</p>
+
+<p>The source code for the site can be found on my GitHub <a href="https://github.com/matthewcodes/SaintfieldBaptistChurch">here</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[React.js FeedWidget]]></title>
