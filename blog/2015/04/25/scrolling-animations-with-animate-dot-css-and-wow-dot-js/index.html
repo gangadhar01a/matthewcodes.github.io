@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Scrolling animations with Animate.css and WOW.js - MatthewCodes</title>
+  <meta name="author" content="Matthew Wilson">
+
+  
+  <meta name="description" content="Scrolling animations with Animate.css and WOW.js written Apr 25th, 2015 in css, javascript Animations without jQuery? Madness! I&rsquo;ve been &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://matthewcodes.github.io/blog/2015/04/25/scrolling-animations-with-animate-dot-css-and-wow-dot-js">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="MatthewCodes" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-62020128-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+  <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900|Slabo+27px' rel='stylesheet' type='text/css'>
+</head>
+
+  <body>
+    <a href="/" class="home-icon">
+      <img src="/images/home.png"/>
+    </a>
+
+    <article role="article" class="full-single-article">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <h1>Scrolling animations with Animate.css and WOW.js</h1>
+        <div class="meta">
+          written 
+
+
+
+
+<time class='entry-date' datetime='2015-04-25T20:16:04+01:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'></span></time>
+          
+
+in
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/css/'>css</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>
+  
+</span>
+
+
+        </div>
+        <p>Animations without jQuery? Madness!</p>
+
+<!-- more -->
+
+
+<p><link rel="stylesheet" href="/assets/animation/animate.css"></p>
+
+<p>I&rsquo;ve been working on a website for a customer for a few months, it&rsquo;s gone through several design changes, but I think I&rsquo;ve finally found the right fit. I can&rsquo;t share it with you until it goes live, but picture a single page site with a scroll over hero (like the home page of this blog).</p>
+
+<p>As I was scrolling through the page, I thought we could do something special with the images and larger blocks of text. I&rsquo;ve seen several other sites that fade in or slide up images as you scroll down and thought it would be a nice bit of polish to the site.</p>
+
+<p>I came across 2 libraries that work really well with each other: <a href="http://daneden.github.io/animate.css/">Animate.css</a> and <a href="http://mynameismatthieu.com/WOW/">WOW.js</a></p>
+
+<p>Animate provides a set of predefined CSS animations, similar to the animations provided by Keynote or PowerPoint. And WOW.js adds the ability to trigger these animations as the user scrolls. Exactly what I was looking for.</p>
+
+<p>It&rsquo;s incredibly simple to set up. Your basic html structure is as follows:</p>
+
+<pre><code>&lt;html&gt;
+  &lt;head
+    &lt;!-- import animate style sheet --&gt;
+    &lt;link rel="stylesheet" href="animate.min.css"&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+  &lt;!-- import and set up wow.js --&gt;
+    &lt;script src="js/wow.min.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+    new WOW().init();
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>To add animation to something simply add the <code>animated</code> class and the name of your animation, e.g. <code>fadeInUp</code> (<a href="https://github.com/daneden/animate.css">Full list of animations are on GitHub</a>)</p>
+
+<p>So if we wanted to animate an <code>h1</code> element we could do:</p>
+
+<pre><code>&lt;h1 class="animated fadeInUp"&gt;Hello World&lt;/h1&gt;
+</code></pre>
+
+<p>If we want to only animate these elements when the user scrolls down we can remove the <code>animated</code> class and add the <code>wow</code> class like so:</p>
+
+<pre><code>&lt;h1 class="fadeInUp wow"&gt;Hello World&lt;/h1&gt;
+</code></pre>
+
+<p>A demo of the libraries can be seen below. The animations only trigger once, so refresh the page if you miss them.</p>
+
+<p>Remember, with great power comes great responsibility!</p>
+
+<h1 class="fadeInUp wow">Demo</h1>
+
+
+
+
+<p class="tada wow">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</p>
+
+
+
+
+<p class="wobble wow">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</p>
+
+
+
+
+<p class="swing wow">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</p>
+
+
+
+
+<p class="rubberBand wow">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</p>
+
+
+
+
+<script src="/assets/animation/wow.min.js"></script>
+
+
+<script>
+ new WOW().init();
+</script>
+
+
+
+        <hr class="divider-short"/>
+
+        
+        <section>
+          <h1>Comments</h1>
+          <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </section>
+        
+      </div>
+    </div>
+  </div>
+</article>
+
+<hr class="divider-short"/>
+
+<div class="archive-link">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        
+          <a class="pull-left" href="/blog/2015/04/20/portfolio-saintfield-baptist-church/" title="Previous Post: Portfolio: Saintfield Baptist Church">&laquo; Previous: Portfolio: Saintfield Baptist Church</a>
+        
+
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+    <footer id="footer" class="her-row">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-1">
+  <a href="/"><h4>Home</h4></a>
+</div>
+
+<div class="col-md-2">
+  <div class="social-icon-list">
+    
+    <a href="https://twitter.com/matt_codes"><img src="/images/glyphicons_social_31_twitter.png"/></a>
+    
+
+    
+    <a href="https://github.com/matthewcodes"><img src="/images/glyphicons_social_21_github.png"/></a>
+    
+
+    
+
+    
+  </div>
+</div>
+
+<div class="pull-right">
+  <h4>Powered by <a href="http://octopress.org/">Octopress</a>.</h4>
+</div>
+
+
+    </div>
+  </div>
+</footer>
+
+    
+      
+
+<script type="text/javascript">
+      var disqus_shortname = 'matthewcodes';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://matthewcodes.github.io/blog/2015/04/25/scrolling-animations-with-animate-dot-css-and-wow-dot-js/';
+        var disqus_url = 'http://matthewcodes.github.io/blog/2015/04/25/scrolling-animations-with-animate-dot-css-and-wow-dot-js/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+    
+  </body>
+</html>
