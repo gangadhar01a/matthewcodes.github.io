@@ -4,7 +4,7 @@
   <title><![CDATA[MatthewCodes]]></title>
   <link href="http://matthewcodes.github.io/atom.xml" rel="self"/>
   <link href="http://matthewcodes.github.io/"/>
-  <updated>2015-04-25T21:09:53+01:00</updated>
+  <updated>2015-05-09T01:33:17+01:00</updated>
   <id>http://matthewcodes.github.io/</id>
   <author>
     <name><![CDATA[Matthew Wilson]]></name>
@@ -12,6 +12,115 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Camel.js: An Introduction]]></title>
+    <link href="http://matthewcodes.github.io/blog/2015/05/09/camel-dot-js-an-introduction/"/>
+    <updated>2015-05-09T00:27:49+01:00</updated>
+    <id>http://matthewcodes.github.io/blog/2015/05/09/camel-dot-js-an-introduction</id>
+    <content type="html"><![CDATA[<p>A routing and integration framework for node.js</p>
+
+<!-- more -->
+
+
+<h2>Apache Camel</h2>
+
+<p>In a previous work project I had the privilege of using <a href="http://camel.apache.org/">Apache Camel</a> for creating an <a href="http://en.wikipedia.org/wiki/Enterprise_service_bus">ESB</a>. Camel allows developers to define routing rules using one of the provided domain-specific languages; these include java, spring and blueprint to name a few.</p>
+
+<p>An example of the java dsl can be seen here:</p>
+
+<pre><code>context.addRoutes(new RouteBuilder() {
+  public void configure() {
+      from("test-jms:queue:test.queue").to("file://test");
+  }
+});
+</code></pre>
+
+<p>This copies something from a queue to a file. Notice how little code was needed to do something that would take quite a number of lines if you were to do it yourself.</p>
+
+<p>I&rsquo;m not going to praise camel any more, I do it enough times a day for people to question my sanity, but theres a famous question on <a href="http://stackoverflow.com/questions/8845186/what-exactly-is-apache-camel">StackOverflow that explains camel much better than I can.</a></p>
+
+<h2>npm</h2>
+
+<p>For the past few months I have been writing a lot javascript for various projects and I&rsquo;ve started to enjoy using node.js for creating server side applications. Coupled with npm (Node Package Manager), it&rsquo;s been easy to utilise different frameworks to get an application up and running in a very short space of time. We used it heavily for a recent <a href="https://github.com/matthewcodes/ping">hackathon project.</a></p>
+
+<p>I&rsquo;ve always been a fan of package managers and have used maven in most of the java projects I&rsquo;ve worked on, I have also pretended to use nuget for C# projects as well (#insideJoke). I wanted to create and publish my own npm package that others could use in their projects, and camel.js was an idea I had been thinking about for a while.</p>
+
+<h2>Camel.js</h2>
+
+<p>My initial plan is to create a &lsquo;camel-like&rsquo; javascript framework that allows people to easily define routes between different endpoints.</p>
+
+<p>My definition of &lsquo;camel-like&rsquo; is a similar DSL to Apache Camel, but using the strengths of node.js, enabling non blocking asynchronous routes. That not only route between built in node modules like <a href="https://nodejs.org/api/fs.html">fs</a>, but also integrate with popular npm packages like <a href="http://expressjs.com/">express</a>.</p>
+
+<p>As of writing this post the current version of camel.js is 0.1.10 and can be installed from npm by running the command:</p>
+
+<pre><code>npm install camel.js
+</code></pre>
+
+<p>The stats on the <a href="https://www.npmjs.com/package/camel.js">npm site</a> say that there have been 320 downloads in the past month! But I have my suspicions that most of these are mirrors/bots, as there have been no issues raised yet on github from anyone using the framework!</p>
+
+<p><a href="https://nodei.co/npm/camel.js/"><img src="https://nodei.co/npm/camel.js.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="NPM" /></a></p>
+
+<p>The current functionality is obviously very limited at this early stage, I have added support for reading and writing to files and have packaged it all up as an npm module.</p>
+
+<p>If you wanted to create a simple file transfer application you first need to require the camel.js module, and create a camel context:</p>
+
+<pre><code>var camel = require('camel.js');
+var context = new camel.context();
+</code></pre>
+
+<p>You can then define your route and add it to the context:</p>
+
+<pre><code>route = new camel.route();
+
+route.from('file://source.txt')
+     .to('file://result.txt');
+
+context.addRoute(route);
+</code></pre>
+
+<p>Then start the context, which will process all routes that have been added.</p>
+
+<pre><code>context.start();
+</code></pre>
+
+<p>You can define as many routes as you like and because we are using the asynchronous callbacks in our file read/write code, the routes themselves will also be processed asynchronously. You can also have as many endpoints defined in a single route as well like so:</p>
+
+<pre><code>route.from('file://source.txt')
+     .to('file://result1.txt');
+     .to('file://result2.txt');
+     .to('file://result3.txt');
+     .to('file://result4.txt');
+     .to('file://result5.txt');
+</code></pre>
+
+<p>This would copy the content of source.txt to all the result*.txt files.</p>
+
+<p>Another feature that has just been added in the latest release is reading all the files from a directory, this can be done like so:</p>
+
+<pre><code>route.from('file://sourceDirectory')
+     .to('file://result.txt');
+</code></pre>
+
+<p>Although the code above is pretty pointless as it would overwrite the content of each file in sourceDirectory to result.txt. It will make more sense once I have directory support added to the <code>to</code> function and we can do this:</p>
+
+<pre><code>route.from('file://sourceDirectory')
+     .to('file://resultDirectory');
+</code></pre>
+
+<h2>Testing</h2>
+
+<p>Once I had my prototype finished, I decided to focus on getting some tests in place so that I could switch to a test driven approach. I decided to use mocha and chai for running and defining the tests (I&rsquo;ll write a separate blog post on how I used them).</p>
+
+<p>These can then be executed locally using the <code>npm test</code> command and they are executed every time I push to GitHub by the Travis CI service, check out the results of the latest build <a href="https://travis-ci.org/matthewcodes/camel.js">here.</a></p>
+
+<h1>Conclusion</h1>
+
+<p>So far the framework is pretty basic, but with the testing framework now in place I can focus on adding new features. I plan to raise issues and milestones in GitHub to help track the progress to the initial 1.0 release. This will hopefully include most of the file component features and perhaps some http as well.</p>
+
+<p>The code for <a href="https://github.com/matthewcodes/camel.js">camel.js is available on my GitHub</a>. Feel free to do a pull request and add some features!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Scrolling animations with Animate.css and WOW.js]]></title>

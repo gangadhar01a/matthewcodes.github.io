@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: javascript | MatthewCodes]]></title>
-  <link href="http://matthewcodes.github.io/blog/categories/javascript/atom.xml" rel="self"/>
+  <title><![CDATA[Category: camel.js | MatthewCodes]]></title>
+  <link href="http://matthewcodes.github.io/blog/categories/camel-dot-js/atom.xml" rel="self"/>
   <link href="http://matthewcodes.github.io/"/>
   <updated>2015-05-09T01:33:17+01:00</updated>
   <id>http://matthewcodes.github.io/</id>
@@ -119,94 +119,6 @@ context.addRoute(route);
 <p>So far the framework is pretty basic, but with the testing framework now in place I can focus on adding new features. I plan to raise issues and milestones in GitHub to help track the progress to the initial 1.0 release. This will hopefully include most of the file component features and perhaps some http as well.</p>
 
 <p>The code for <a href="https://github.com/matthewcodes/camel.js">camel.js is available on my GitHub</a>. Feel free to do a pull request and add some features!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Scrolling animations with Animate.css and WOW.js]]></title>
-    <link href="http://matthewcodes.github.io/blog/2015/04/25/scrolling-animations-with-animate-dot-css-and-wow-dot-js/"/>
-    <updated>2015-04-25T20:16:04+01:00</updated>
-    <id>http://matthewcodes.github.io/blog/2015/04/25/scrolling-animations-with-animate-dot-css-and-wow-dot-js</id>
-    <content type="html"><![CDATA[<p>Animations without jQuery? Madness!</p>
-
-<!-- more -->
-
-
-<p><link rel="stylesheet" href="http://matthewcodes.github.io/assets/animation/animate.css"></p>
-
-<p>I&rsquo;ve been working on a website for a customer for a few months, it&rsquo;s gone through several design changes, but I think I&rsquo;ve finally found the right fit. I can&rsquo;t share it with you until it goes live, but picture a single page site with a scroll over hero (like the home page of this blog).</p>
-
-<p>As I was scrolling through the page, I thought we could do something special with the images and larger blocks of text. I&rsquo;ve seen several other sites that fade in or slide up images as you scroll down and thought it would be a nice bit of polish to the site.</p>
-
-<p>I came across 2 libraries that work really well with each other: <a href="http://daneden.github.io/animate.css/">Animate.css</a> and <a href="http://mynameismatthieu.com/WOW/">WOW.js</a></p>
-
-<p>Animate provides a set of predefined CSS animations, similar to the animations provided by Keynote or PowerPoint. And WOW.js adds the ability to trigger these animations as the user scrolls. Exactly what I was looking for.</p>
-
-<p>It&rsquo;s incredibly simple to set up. Your basic html structure is as follows:</p>
-
-<pre><code>&lt;html&gt;
-  &lt;head
-    &lt;!-- import animate style sheet --&gt;
-    &lt;link rel="stylesheet" href="animate.min.css"&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-  &lt;!-- import and set up wow.js --&gt;
-    &lt;script src="js/wow.min.js"&gt;&lt;/script&gt;
-    &lt;script&gt;
-    new WOW().init();
-    &lt;/script&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-
-<p>To add animation to something simply add the <code>animated</code> class and the name of your animation, e.g. <code>fadeInUp</code> (<a href="https://github.com/daneden/animate.css">Full list of animations are on GitHub</a>)</p>
-
-<p>So if we wanted to animate an <code>h1</code> element we could do:</p>
-
-<pre><code>&lt;h1 class="animated fadeInUp"&gt;Hello World&lt;/h1&gt;
-</code></pre>
-
-<p>If we want to only animate these elements when the user scrolls down we can remove the <code>animated</code> class and add the <code>wow</code> class like so:</p>
-
-<pre><code>&lt;h1 class="fadeInUp wow"&gt;Hello World&lt;/h1&gt;
-</code></pre>
-
-<p>A demo of the libraries can be seen below. The animations only trigger once, so refresh the page if you miss them.</p>
-
-<p>Remember, with great power comes great responsibility!</p>
-
-<h1 class="fadeInUp wow">Demo</h1>
-
-
-
-
-<p class="tada wow">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</p>
-
-
-
-
-<p class="wobble wow">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</p>
-
-
-
-
-<p class="swing wow">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</p>
-
-
-
-
-<p class="rubberBand wow">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</p>
-
-
-
-
-<script src="http://matthewcodes.github.io/assets/animation/wow.min.js"></script>
-
-
-<script>
- new WOW().init();
-</script>
-
 ]]></content>
   </entry>
   
