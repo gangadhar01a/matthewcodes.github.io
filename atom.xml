@@ -4,7 +4,7 @@
   <title><![CDATA[MatthewCodes]]></title>
   <link href="http://matthewcodes.github.io/atom.xml" rel="self"/>
   <link href="http://matthewcodes.github.io/"/>
-  <updated>2015-05-09T01:33:17+01:00</updated>
+  <updated>2015-11-04T20:49:47+00:00</updated>
   <id>http://matthewcodes.github.io/</id>
   <author>
     <name><![CDATA[Matthew Wilson]]></name>
@@ -12,6 +12,68 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Vagrant and Hyper-V Issues]]></title>
+    <link href="http://matthewcodes.github.io/blog/2015/11/04/vagrant-and-hyper-v-issues/"/>
+    <updated>2015-11-04T19:44:16+00:00</updated>
+    <id>http://matthewcodes.github.io/blog/2015/11/04/vagrant-and-hyper-v-issues</id>
+    <content type="html"><![CDATA[<p>Some annoyances in Vagrant 1.7.4</p>
+
+<!-- more -->
+
+
+<p>We have been using Vagrant, Chef and Hyper-V for a work project for a few months now, and recently have been running into a few annoying bugs.</p>
+
+<hr />
+
+<p>The first issue caught us out after we upgraded to 1.7.4 from 1.7.2. The error we were getting looked something like this:</p>
+
+<pre><code>The following WinRM command responded with a non-zero exit status.
+Vagrant assumes that this means the command failed!
+
+cmdkey /add:xxx.xxx.xxx.xxx /user:DOMAIN\user /pass:Password
+
+Stdout from the command:
+
+Stderr from the command:
+
+Exception calling "RegisterTaskDefinition" with "7" argument(s): "The username or password is incorrect. (Exception from HRESULT: 0x8007052E)"
+At C:\tmp\vagrant-elevated-shell.ps1:58 char:1
++ $folder.RegisterTaskDefinition($task_name, $task, 6, $username, $password,1, $n ...
+</code></pre>
+
+<p>I could not work this one out and reverted to 1.7.2, after a few months I thought I had gotten a lead on the issue when I noticed that there were a few winRM commands executed on our base box. After reverting them and trying a few different combinations I was still getting the same error.</p>
+
+<p>My next thought was maybe the username needs to be fully qualified with the domain name, I tried adding this into the config in the vagrant file but this caused other errors much earlier in the vagrant up process.</p>
+
+<p>So I jumped onto the VM and edited the PowerShell script mentioned in the error output (<code>C:\tmp\vagrant-elevated-shell.ps1</code>) and prepended the username variable with the domain name, this was swiftly removed after doing a vagrant up as this file is copied to the guest from the host. I edited the host copy and got the same error. As a last resort I added some logging to the script and ran a vagrant up again. This time I noticed that the password was incorrect!</p>
+
+<p>Our password contains dollar ($) symbols and these were being stripped out in the script! I&rsquo;ve been caught by this issue before, PowerShell needs the dollar sign to be escaped by a back-tick (`).</p>
+
+<p>I sauntered over to a colleagues desk to brag at this major victory for mankind and he was like oh yea I&rsquo;ve seen a <a href="https://github.com/mitchellh/vagrant/commit/1dd081d8665134bcb9636d2b49efce0fded4a08c">commit message</a> with a fix for that!</p>
+
+<p>We noticed though that our local version was different than the one in the commit message, the change had been lost by <a href="https://github.com/mitchellh/vagrant/commit/1152b4e1df97fb5f468491954932d4f0c09875b1">this newer commit</a></p>
+
+<p>I forked the vagrant repo, made the fix and submitted a pull request, which you can view <a href="https://github.com/mitchellh/vagrant/pull/6452">here</a> someone else had a similar issue and raised a <a href="https://github.com/mitchellh/vagrant/issues/6421">defect</a> have a look at my comment for the steps on patching your environment.</p>
+
+<p>Hopefully my PR will be available in the next release of Vagrant.</p>
+
+<hr />
+
+<p>Another issue that we were having was our vagrant provision was taking more than 2 hours to complete and was timing out for no reason. I stumbled upon this <a href="https://github.com/mitchellh/vagrant/issues/5506">issue on GitHub</a> which references the same PowerShell modified in our first issue. The file (elevated_shell.ps1.erb) has the following line:</p>
+
+<pre><code>&lt;ExecutionTimeLimit&gt;PT2H&lt;/ExecutionTimeLimit&gt;
+</code></pre>
+
+<p>Changing this to:</p>
+
+<pre><code>&lt;ExecutionTimeLimit&gt;PT4H&lt;/ExecutionTimeLimit&gt;
+</code></pre>
+
+<p>Fixed our issue, I&rsquo;m hoping this is also a temporary patch as there is already a <a href="https://github.com/mitchellh/vagrant/pull/6213">PR</a> which makes this value configurable.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Camel.js: An Introduction]]></title>

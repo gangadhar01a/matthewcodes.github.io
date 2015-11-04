@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Vagrant and Hyper-V Issues - MatthewCodes</title>
+  <meta name="author" content="Matthew Wilson">
+
+  
+  <meta name="description" content="Vagrant and Hyper-V Issues written Nov 4th, 2015 in chef, vagrant Some annoyances in Vagrant 1.7.4 We have been using Vagrant, Chef and Hyper-V for &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://matthewcodes.github.io/blog/2015/11/04/vagrant-and-hyper-v-issues">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="MatthewCodes" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-62020128-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+  <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900|Slabo+27px' rel='stylesheet' type='text/css'>
+</head>
+
+  <body>
+    <a href="/" class="home-icon">
+      <img src="/images/home.png"/>
+    </a>
+
+    <article role="article" class="full-single-article">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <h1>Vagrant and Hyper-V Issues</h1>
+        <div class="meta">
+          written 
+
+
+
+
+<time class='entry-date' datetime='2015-11-04T19:44:16+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'></span></time>
+          
+
+in
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/chef/'>chef</a>, <a class='category' href='/blog/categories/vagrant/'>vagrant</a>
+  
+</span>
+
+
+        </div>
+        <p>Some annoyances in Vagrant 1.7.4</p>
+
+<!-- more -->
+
+
+<p>We have been using Vagrant, Chef and Hyper-V for a work project for a few months now, and recently have been running into a few annoying bugs.</p>
+
+<hr />
+
+<p>The first issue caught us out after we upgraded to 1.7.4 from 1.7.2. The error we were getting looked something like this:</p>
+
+<pre><code>The following WinRM command responded with a non-zero exit status.
+Vagrant assumes that this means the command failed!
+
+cmdkey /add:xxx.xxx.xxx.xxx /user:DOMAIN\user /pass:Password
+
+Stdout from the command:
+
+Stderr from the command:
+
+Exception calling "RegisterTaskDefinition" with "7" argument(s): "The username or password is incorrect. (Exception from HRESULT: 0x8007052E)"
+At C:\tmp\vagrant-elevated-shell.ps1:58 char:1
++ $folder.RegisterTaskDefinition($task_name, $task, 6, $username, $password,1, $n ...
+</code></pre>
+
+<p>I could not work this one out and reverted to 1.7.2, after a few months I thought I had gotten a lead on the issue when I noticed that there were a few winRM commands executed on our base box. After reverting them and trying a few different combinations I was still getting the same error.</p>
+
+<p>My next thought was maybe the username needs to be fully qualified with the domain name, I tried adding this into the config in the vagrant file but this caused other errors much earlier in the vagrant up process.</p>
+
+<p>So I jumped onto the VM and edited the PowerShell script mentioned in the error output (<code>C:\tmp\vagrant-elevated-shell.ps1</code>) and prepended the username variable with the domain name, this was swiftly removed after doing a vagrant up as this file is copied to the guest from the host. I edited the host copy and got the same error. As a last resort I added some logging to the script and ran a vagrant up again. This time I noticed that the password was incorrect!</p>
+
+<p>Our password contains dollar ($) symbols and these were being stripped out in the script! I&rsquo;ve been caught by this issue before, PowerShell needs the dollar sign to be escaped by a back-tick (`).</p>
+
+<p>I sauntered over to a colleagues desk to brag at this major victory for mankind and he was like oh yea I&rsquo;ve seen a <a href="https://github.com/mitchellh/vagrant/commit/1dd081d8665134bcb9636d2b49efce0fded4a08c">commit message</a> with a fix for that!</p>
+
+<p>We noticed though that our local version was different than the one in the commit message, the change had been lost by <a href="https://github.com/mitchellh/vagrant/commit/1152b4e1df97fb5f468491954932d4f0c09875b1">this newer commit</a></p>
+
+<p>I forked the vagrant repo, made the fix and submitted a pull request, which you can view <a href="https://github.com/mitchellh/vagrant/pull/6452">here</a> someone else had a similar issue and raised a <a href="https://github.com/mitchellh/vagrant/issues/6421">defect</a> have a look at my comment for the steps on patching your environment.</p>
+
+<p>Hopefully my PR will be available in the next release of Vagrant.</p>
+
+<hr />
+
+<p>Another issue that we were having was our vagrant provision was taking more than 2 hours to complete and was timing out for no reason. I stumbled upon this <a href="https://github.com/mitchellh/vagrant/issues/5506">issue on GitHub</a> which references the same PowerShell modified in our first issue. The file (elevated_shell.ps1.erb) has the following line:</p>
+
+<pre><code>&lt;ExecutionTimeLimit&gt;PT2H&lt;/ExecutionTimeLimit&gt;
+</code></pre>
+
+<p>Changing this to:</p>
+
+<pre><code>&lt;ExecutionTimeLimit&gt;PT4H&lt;/ExecutionTimeLimit&gt;
+</code></pre>
+
+<p>Fixed our issue, I&rsquo;m hoping this is also a temporary patch as there is already a <a href="https://github.com/mitchellh/vagrant/pull/6213">PR</a> which makes this value configurable.</p>
+
+
+        <hr class="divider-short"/>
+
+        
+        <section>
+          <h1>Comments</h1>
+          <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+        </section>
+        
+      </div>
+    </div>
+  </div>
+</article>
+
+<hr class="divider-short"/>
+
+<div class="archive-link">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        
+          <a class="pull-left" href="/blog/2015/05/09/camel-dot-js-an-introduction/" title="Previous Post: Camel.js: An Introduction">&laquo; Previous: Camel.js: An Introduction</a>
+        
+
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+    <footer id="footer" class="her-row">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-1">
+  <a href="/"><h4>Home</h4></a>
+</div>
+
+<div class="col-md-2">
+  <div class="social-icon-list">
+    
+    <a href="https://twitter.com/matt_codes"><img src="/images/glyphicons_social_31_twitter.png"/></a>
+    
+
+    
+    <a href="https://github.com/matthewcodes"><img src="/images/glyphicons_social_21_github.png"/></a>
+    
+
+    
+
+    
+  </div>
+</div>
+
+<div class="pull-right">
+  <h4>Powered by <a href="http://octopress.org/">Octopress</a>.</h4>
+</div>
+
+
+    </div>
+  </div>
+</footer>
+
+    
+      
+
+<script type="text/javascript">
+      var disqus_shortname = 'matthewcodes';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://matthewcodes.github.io/blog/2015/11/04/vagrant-and-hyper-v-issues/';
+        var disqus_url = 'http://matthewcodes.github.io/blog/2015/11/04/vagrant-and-hyper-v-issues/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+    
+  </body>
+</html>
