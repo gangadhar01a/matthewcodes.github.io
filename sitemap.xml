@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://matthewcodes.github.io/blog/2016/06/14/pirotor-raspberry-pi-quadrotor-part-1/</loc>
+    <lastmod>2016-06-14T23:47:43+01:00</lastmod>
+  </url>
+  <url>
     <loc>http://matthewcodes.github.io/blog/2015/11/04/vagrant-and-hyper-v-issues/</loc>
     <lastmod>2015-11-04T19:44:16+00:00</lastmod>
   </url>
