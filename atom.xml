@@ -4,7 +4,7 @@
   <title><![CDATA[MatthewCodes]]></title>
   <link href="http://matthewcodes.github.io/atom.xml" rel="self"/>
   <link href="http://matthewcodes.github.io/"/>
-  <updated>2016-06-14T23:48:09+01:00</updated>
+  <updated>2016-06-15T01:00:49+01:00</updated>
   <id>http://matthewcodes.github.io/</id>
   <author>
     <name><![CDATA[Matthew Wilson]]></name>
@@ -18,7 +18,134 @@
     <link href="http://matthewcodes.github.io/blog/2016/06/14/pirotor-raspberry-pi-quadrotor-part-1/"/>
     <updated>2016-06-14T23:47:43+01:00</updated>
     <id>http://matthewcodes.github.io/blog/2016/06/14/pirotor-raspberry-pi-quadrotor-part-1</id>
-    <content type="html"><![CDATA[
+    <content type="html"><![CDATA[<p>Building a Raspberry Pi Zero powered quadrotor, drone thingy</p>
+
+<!-- more -->
+
+
+<p>This is a project I&rsquo;ve been looking to start for a while and I&rsquo;ve finally got started on an initial prototype.
+The idea is to build a drone that uses a Raspberry Pi as the flight controller and to build something that will take off, hover and land without breaking something.
+I don&rsquo;t think I&rsquo;ll be able to use it for FPV racing or anything that requires quick input, I&rsquo;m aiming for autonomous flight in good conditions.</p>
+
+<p>To get started I gathered a few parts:</p>
+
+<ul>
+<li>Raspberry Pi Zero</li>
+<li>Adafruit 16-Channel PWM / Servo HAT</li>
+<li>Afro ESC 12Amp BEC UltraLite Multirotor ESC V3 (SimonK Firmware)</li>
+<li>DYS BE1806-2300kv Brushless Multirotor Motor 3S~4S</li>
+<li>Gemfan 5030 GRP/Nylon Propellers CW/CCW Set (Black) 5 x 3</li>
+<li>Turnigy nano-tech 1300mah 2S 25~50C Lipo Pack</li>
+</ul>
+
+
+<p>For this first round of prototyping the goal was to get the Raspberry Pi to control a motor! Sounds simple enough!</p>
+
+<h2>Step 1 - Put all the parts together!</h2>
+
+<p>The first stage of the project was to solder (Which I haven&rsquo;t needed to do since I was in school) the header pins to the Pi and PWM Hat, then stack them together.</p>
+
+<p><img src="http://matthewcodes.github.io/images/piRotor1/IMG_5068.JPG" class="img-responsive"></img></p>
+
+<p>Once finished you should have something that looks like this:</p>
+
+<p><img src="http://matthewcodes.github.io/images/piRotor1/IMG_5063.JPG" class="img-responsive"></img></p>
+
+<p>(Note in the image above I have already connected the ESC to channel 0 of the PWM Hat)</p>
+
+<p>The ESC then connects to the motor and power supply.
+In the image below the white and red crocodile clips are connecting the power supply. The ESC to motor connectors are pretty self explanatory.</p>
+
+<p><img src="http://matthewcodes.github.io/images/piRotor1/IMG_5064.JPG" class="img-responsive"></img></p>
+
+<h2>Step 2 - Powering everything</h2>
+
+<p>The trickiest part of this prototype was working out how to power everything.
+(pro tip: don&rsquo;t jam ESC power wires into a LiPo battery, sparks may fly, Colins may cry)</p>
+
+<ul>
+<li>Raspberry Pi - Connected to mains using official raspberry pi power supply</li>
+<li>PWM HAT - Requires an additional 5-6v power supply, we hooked ours up to an old PC power supply, will be connected to the drone battery when we work out how.</li>
+<li>ESC - Tried to connect to the same 5v power supply, but didn&rsquo;t work, crocodile clips in the battery (7.4v), connected to the ESC did the trick. When the green LED illuminated on the ESC, the celebrations were mighty.</li>
+</ul>
+
+
+<p>In terms of powering on everything, the order that worked for us was:</p>
+
+<ol>
+<li>PWM HAT</li>
+<li>Raspberry Pi</li>
+<li>ESC</li>
+</ol>
+
+
+<h2>Step 3 - Preparing the Pi</h2>
+
+<p>I followed Adafruit&rsquo;s guide for setting up the Pi with the necessary libraries - <a href="https://learn.adafruit.com/adafruit-16-channel-pwm-servo-hat-for-raspberry-pi/overview">https://learn.adafruit.com/adafruit-16-channel-pwm-servo-hat-for-raspberry-pi/overview</a></p>
+
+<p>The only issue was the GitHub repo they mention for some sample code seems to have moved to here - <a href="https://github.com/adafruit/Adafruit_Python_PCA9685">https://github.com/adafruit/Adafruit_Python_PCA9685</a></p>
+
+<h2>Step 4 - Writing the code</h2>
+
+<p>The first step in the code is to &lsquo;arm&rsquo; the ESC, this involves sending a PWM signal to channel 0, that is in the neutral or power-off area, the <a href="http://www.flyingtech.co.uk/sites/default/files/product_files/AfroESC%2020A%20USER%20MANUAL_0.pdf">Afro ESC datasheet</a> describes this as:</p>
+
+<p><code>For PWM input, motor stop / arm below 1060μs</code></p>
+
+<p>I found a helpful formula for converting this 1060 to something that the PWM library can use:</p>
+
+<p><code>1060 / (1000000.0/4096/60) = 260.5056</code></p>
+
+<p>The code in <code>pirotor.py</code> looks like this:</p>
+
+<pre><code>print('Arming motor')
+pwm.set_pwm(0,0,260)
+time.sleep(5
+</code></pre>
+
+<p>This causes the ESC led to illuminate green and emit a reassuring bleep, matching what the datasheet describes: &ldquo;the ESC will arm (long beep), and the green LED will light&rdquo;</p>
+
+<p>I then tried setting the pwm value to 560:</p>
+
+<pre><code>pwm.set_pwm(0,0,560)
+</code></pre>
+
+<p>But this caused the motor to jump and stop, and the ESC light turned off. The datasheet describes the full power as 1860μs, which when we pass into our formula:</p>
+
+<p><code>1860 / (1000000.0/4096/60) = 457.1136</code></p>
+
+<p>Which is less than 560, so that&rsquo;s why it didn&rsquo;t work!</p>
+
+<p>You also can&rsquo;t jump straight to full speed, you got to ease it in, our final code block for controlling the motor speed ended like this:</p>
+
+<pre><code>print('Arming motor')
+pwm.set_pwm(0,0,260)
+time.sleep(5)
+print('Starting motor at 300')
+pwm.set_pwm(0,0,300)
+time.sleep(3)
+print('increasing to 360')
+pwm.set_pwm(0,0,360)
+time.sleep(3)
+print('increasing to 400')
+pwm.set_pwm(0,0,400)
+time.sleep(3)
+print('increasing to 450')
+pwm.set_pwm(0,0,450)
+time.sleep(3)
+print('stopping')
+pwm.set_pwm(0,0,260)
+</code></pre>
+
+<p>This gradually gets the motor up to full speed then stops.</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ZHsztU_inCQ" frameborder="0" allowfullscreen></iframe>
+
+
+<hr />
+
+<p>The full sample code can be found in the <a href="https://github.com/matthewcodes/piRotor">piRotor repo</a></p>
+
+<p>Next step is to get some sensors and try and pull data from them, and use this to control what the motor needs to do to stay level.</p>
 ]]></content>
   </entry>
   
